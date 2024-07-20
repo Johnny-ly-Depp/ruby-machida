@@ -1,0 +1,35 @@
+▼　COMMANDS
+
+　▽　train start
+
+	現在時刻から一番近い未来の電車を「乗っている車両」に設定する。
+
+　▽　train arrives
+	「乗っている車両」について以下の情報を表示
+		・町田駅到着時刻
+		・町田駅到着まで残り何分か
+
+　▽　train delay [minuts]
+	arrives の時間を minuts 分だけ遅らせる。
+
+
+▼　Software Design
+
+▽　時刻表
+　　◇　データ形式案
+	・csv
+	- PRO
+		RubyにてCSVを取り入れる練習になる
+	- CON
+		だせェ
+
+	・Rubyのデータ構造
+	- PRO
+		Ruby のデータ構造の学習になる
+	- CON
+		変更が面倒
+
+	・Rubyデータ構造
+
+▼ Coding Workflow
+
