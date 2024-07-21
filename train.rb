@@ -70,7 +70,6 @@ p    train_depart_minutes.delete_if { |time| time < Time.now.min }
 
     # If all trains have been left in current hour,
     # check the next hour
-p      
 
     depart_time = train_depart_minutes[0]
 p    @abording_train = trains.find { |train| train[:新宿] == depart_time }
@@ -82,16 +81,18 @@ p    @abording_train = trains.find { |train| train[:新宿] == depart_time }
   desc "arrives", ""
   def arrives
 
-    arrive_hour = Time.now.hour
+p    arrive_hour = Time.now.hour
+p    町田 = @abording_train[:町田]
 
-    if @abording_train[:町田駅].is_a?(String)
-      町田駅 = @abording_train[:町田駅][0..1].to_i
+    if 町田.is_a?(String)
+      町田 = 町田[0..1].to_i
       arrive_hour += 1
     end
 
-    p remaning_minutes = Time.now.min - 町田駅
-    puts "You will be arrived at #{arrive_hour}:#{町田駅}\n
-          which is #{remaning_minutes} to go."
+    # TODO BUG: when arrival time has "#" this mathmatic would not work
+p    remaning_minutes = 町田 - Time.now.min
+    puts "You will be arrived at #{arrive_hour}:#{町田}
+          which is #{remaning_minutes} minutes to go."
   end
 
 end
