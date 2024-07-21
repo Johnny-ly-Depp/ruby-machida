@@ -44,7 +44,7 @@ class TrainCommand < Thor
       [22, 26, 29, 38, 44, 53]
     ].map { |train| stations.zip(train).to_h }
 
-    p trains =
+    trains =
       case Time.now.hour
       when 18..20
       	trains_departs_18to20
@@ -59,14 +59,14 @@ class TrainCommand < Thor
       	trains_departs_18to20
       end
 
-    p train_depart_minutes = 
-        trains.map { |train| train[:新宿].to_h }
+    train_depart_minutes = 
+        trains.map { |train| train[:新宿] }
 
     # rid the trains already has been left
-    p train_depart_minutes.delete_if { |time| time < Time.now.min } 
+    train_depart_minutes.delete_if { |time| time < Time.now.min } 
 
     depart_time = train_depart_minutes[0]
-    @abording_train = trains.find { |train| train[0] == depart_time }
+    @abording_train = trains.find { |train| train[:新宿] == depart_time }
     
     puts "Have a nice trip!"
   end
