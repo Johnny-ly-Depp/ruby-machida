@@ -81,17 +81,18 @@ p    @abording_train = trains.find { |train| train[:新宿] == depart_time }
   desc "arrives", ""
   def arrives
 
-p    arrive_hour = Time.now.hour
-p    町田 = @abording_train[:町田]
+p    arrival_hour = Time.now.hour 
+    町田 = @abording_train[:町田]
 
     if 町田.is_a?(String)
       町田 = 町田[0..1].to_i
-      arrive_hour += 1
-    end
-
-    # TODO BUG: when arrival time has "#" this mathmatic would not work
+      arrival_hour += 1
+      remaning_minuts = (60 - Time.now.min) + 町田
+    else
 p    remaning_minutes = 町田 - Time.now.min
-    puts "You will be arrived at #{arrive_hour}:#{町田}
+   end
+
+    puts "You will be arrived at #{sprintf("%02d:%02d", arrival_hour, 町田)}
           which is #{remaning_minutes} minutes to go."
   end
 
