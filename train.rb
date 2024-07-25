@@ -1,9 +1,6 @@
 #!/usr/bin/env ruby
 require 'thor'
 
-# TODO　例外処理
-
-
 class TrainCommand < Thor
   
     def assign_train(hour) 
@@ -64,31 +61,30 @@ class TrainCommand < Thor
   desc "start", "Use it when departing 新宿. It will assign the train you are currently taking."
   def start 
 
-p    trains = assign_train(Time.now.hour)
-p    train_depart_minutes = 
+    trains = assign_train(Time.now.hour)
+    train_depart_minutes = 
         trains.map { |train| train[:新宿] }
     
     # rid the trains already has been left
-p    train_depart_minutes.delete_if { |time| time < Time.now.min } 
+    train_depart_minutes.delete_if { |time| time < Time.now.min } 
     
     # If all trains have been left in current hour,
     # check the next hour
     if train_depart_minutes.empty? then
-p      @abording_train = assign_train(Time.now.hour + 1)[0]
+      @abording_train = assign_train(Time.now.hour + 1)[0]
     else
     depart_time = train_depart_minutes[0]
-p    @abording_train = trains.find { |train| train[:新宿] == depart_time }
+    @abording_train = trains.find { |train| train[:新宿] == depart_time }
     end    
 
     puts "Have a nice trip!"
   end
 
-
   desc "arrives", "Displays info when you will arive to 町田."
   def arrives
 
     arrival_hour = Time.now.hour 
-p    町田 = @abording_train[:町田]
+    町田 = @abording_train[:町田]
 
     if 町田.is_a?(String)
       町田 = 町田[0..1].to_i
@@ -106,32 +102,30 @@ p    町田 = @abording_train[:町田]
   def search(next_station)
 
     trains = assign_train(Time.now.hour)
-
+    unless @stations.include?(next_station.to_sym)
+      puts "That station doesn't exist."
+      return
+    end
+    
     # fetch the list of the current station arrival time (before of the arg station)
     # ex) arg:新百合ヶ丘 -> list of 登戸 
-    # TODO 例外処理 when arg station doesn't exist
-p    next_station_index = @stations.index(next_station.to_sym)
-p    current_station = @stations[next_station_index - 1]
-p    current_station_arrival_times = trains.map { |train| train[current_station] }
+    next_station_index = @stations.index(next_station.to_sym)
+    current_station = @stations[next_station_index - 1]
+    current_station_arrival_times = trains.map { |train| train[current_station] }
 
     # find the largest number which fufilles the following condition
     # arrival time (elements of the list) < current minutes
-
-    # TODO BUG: when time contains '#' 
-p    current_station_arrival_times =
+    current_station_arrival_times =
        current_station_arrival_times.select { |time| 
         if time.is_a?(String)
           time = time.to_i + 60
         end
         time < Time.now.min
       }
-    # past_arrival_times = current_station_arrival_times.select { |time| time < Time.now.min } 
     
     current_station_arrival_time = current_station_arrival_times.max
-    
-p    @abording_train = trains.find { |train| train[current_station] == current_station_arrival_time }
+    @abording_train = trains.find { |train| train[current_station] == current_station_arrival_time }
   end
-
 end
 
 TrainCommand.start(ARGV)
