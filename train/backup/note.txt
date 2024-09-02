@@ -1,0 +1,8 @@
+▼　requirement
+
+	◆　embed start method to head of other processes
+
+		option 1) メソッドとして抽出する
+
+		そもそもarrives メソッドでも必要なのか？
+		→ @abodring_train 選定の過程が必要
