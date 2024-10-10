@@ -17,11 +17,23 @@ class TrainCommand < Thor
   FIRST_STATION_COLUMN = Train.column_names[2]
   FINAL_STATION_COLUMN = Train.column_names[-3]
 
+  # TODO　起動時刻が0-17時であるとき
+  #           ・0に設定してしまう
+  #           ・「 OUTATIME! 通勤時間外での使用を検知しました。テストデータを使用します。」の出力
+  #           ・ＤＢに0-17時用のデータを挿入
+  CURRENT_HOUR = case Time.now.hour
+                 when 0..17
+                   puts " OUTATIME! 通勤時間外での使用を検知しました。テストとして18時のデータを使用します。"
+                   18
+                 else
+                   Time.now.hour
+                 end
+  
   desc "start", "Use it when departing 新宿. It will assign the train you are currently taking."
   def start 
     Train.all.update(abording: false)
 
-    trains = Train.where(depart_hour: Time.now.hour)
+    trains = Train.where(depart_hour: CURRENT_HOUR)
     train_depart_minutes = 
       trains.map { |train| train[FIRST_STATION_COLUMN] }
     
@@ -31,7 +43,7 @@ class TrainCommand < Thor
     # If all trains have been left in current hour,
     # check the next hour
     if train_depart_minutes.empty? then
-       abording_train = Train.where(depart_hour: Time.now.hour + 1).first
+       abording_train = Train.where(depart_hour: CURRENT_HOUR + 1).first
     else
       depart_time = train_depart_minutes[0]
       abording_train = Train.find_by(FIRST_STATION_COLUMN => depart_time)
@@ -89,7 +101,7 @@ class TrainCommand < Thor
       return
     end
 
-    trains = Train.where(depart_hour: Time.now.hour)
+    trains = Train.where(depart_hour: CURRENT_HOUR)
 
     # fetch the list of current station arrival time (before of the arg station)
     # ex) arg:新百合ヶ丘 -> list of 登戸 
