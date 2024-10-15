@@ -53,13 +53,13 @@ class TrainCommand < Thor
   desc "arrives", "Displays info when you will arive to 町田."
   def arrives
     
-    # TODO Time に変更する。
-    # Time も自由に hour を変更できるため問題ない。
-    # 　しかし、Time にする利点は何か検討する
-    #     ・統一性
     arrival_hour = CURRENT_HOUR
     abording_train = Train.find_by(abording: true)
 
+# TODO bug; 例として59分に起動し、start の処理で取得したリストがnext_hourの以下のものだと不具合
+#   [7, 18, 39, 43, 52]
+#     →  このリストには減少している箇所がない
+# 
 #   町田に次のhourに到着するか判定
 #   例）18時に出発した場合、19時着となるか？
 #        [48, 54, 0, 4, 7, 15, 21]
@@ -75,7 +75,7 @@ class TrainCommand < Thor
     arrival_minute = abording_train[FINAL_STATION_COLUMN]
 
       destination_arrival_time = Time.now.change(hour: arrival_hour, min: arrival_minute)
-      remaning_minutes = ((destination_arrival_time - Time.now.change(hour: arrival_hour, min: Time.now.min)) / 60).to_i
+      remaning_minutes = ((destination_arrival_time - Time.now.change(hour: CURRENT_HOUR, min: Time.now.min)) / 60).to_i
 
 
     puts "You will be arrived at #{sprintf("%02d:%02d", arrival_hour, arrival_minute)}
