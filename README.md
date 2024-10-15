@@ -10,6 +10,7 @@ DBのカラム名を動的に取得するため、テーブルを作成さえす
 
 # 実行
 Rubyのインストール・環境構築など一切不要。
+当リポジトリをダウンロードし、ディレクトリ直下で以下のコマンドを実行してください。
 ```
 $ docker build -t ruby-image-name .  #初回のみ実行
 $ docker run --rm -it --name ruby-container-name ruby-image-name ruby ruby_machida.rb　<コマンド> <引数>
